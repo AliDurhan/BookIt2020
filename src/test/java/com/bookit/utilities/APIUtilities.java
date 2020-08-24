@@ -11,14 +11,14 @@ public class APIUtilities {
     }
 
     public static String getToken(){
-        Response response = given()
-                                .queryParam("email", Environment.LEADER_USERNAME)
-                                .queryParam("password", Environment.LEADER_PASSWORD)
-                            .when()
-                                .get("/sign"); //this would come from the Endpoints util class
-        response.then().log().ifError();
+        Response response = given().
+                queryParam("email", Environment.LEADER_USERNAME).
+                queryParam("password", Environment.LEADER_PASSWORD).
+                when().
+                get("/sign");
+        response.then().log().ifError();//if request failed, print response information
         String token = response.jsonPath().getString("accessToken");
-        System.out.println("TOKEN ::" + token);
+        System.out.println("TOKEN :: " + token);
         return token;
     }
 
