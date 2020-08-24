@@ -23,6 +23,7 @@ Feature: Rooms
     When user sends GET request to "/api/rooms"
     And user verifies that response status code is 200
     Then user payload contains following room names:
+      | mit         |
       | harvard     |
       | yale        |
       | princeton   |
@@ -40,4 +41,3 @@ Feature: Rooms
       | amazon      |
       | tesla       |
       | facebook    |
-      | ping pong   |
