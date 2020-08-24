@@ -52,9 +52,8 @@ public class APIStepDefinitions {
     }
 
     @Then("user verifies that response status code is {int}")
-    public void user_verifies_that_response_status_code_is(Integer int1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void user_verifies_that_response_status_code_is(int expectedStatusCode) {
+        Assert.assertEquals(expectedStatusCode,response.getStatusCode());
     }
 
     @Then("user should be able to see all room names")
