@@ -1,6 +1,8 @@
 package com.bookit.utilities;
 
 import io.restassured.response.Response;
+import org.junit.Assert;
+
 import static io.restassured.RestAssured.*;
 
 
@@ -48,5 +50,64 @@ public class APIUtilities {
         System.out.println("TOKEN ::" + token);
         return token;
     }
+
+    public static String getToken(String email, String password){
+        Response response = given().
+                queryParam("email", email).
+                queryParam("password", password).
+                when().
+                get("/sign");
+        response.then().log().ifError();//if request failed, print response information
+        String token = response.jsonPath().getString("accessToken");
+        System.out.println("TOKEN :: " + token);
+        return token;
+    }
+
+    public static int getUserId (String email, String password){
+        try {
+            String token = getToken(email, password);
+            Response response = given().auth().oauth2(token)
+                    .when().get(Endpoints.GET_ME);
+            response.then().log().ifError();
+
+            int id = response.jsonPath().getInt("id");
+            return id;
+        } catch (Exception e){
+            System.out.println("USER DOESN'T EXIST");
+            System.out.println(e.getMessage());
+        }
+        return -1;
+    }
+
+    public static Response deleteUserByID(int id){
+        String token = getToken("teacher");
+        Response response = given().auth().oauth2(token).when().delete(Endpoints.DELETE_STUDENT, id);
+        response.then().log().ifError();
+        return response;
+    }
+
+    public static Response addBatch (int batchNumber){
+        String token = getToken("teacher");
+
+        Response response = given()
+                                .auth().oauth2(token)
+                                .queryParam("batch-number", batchNumber)
+                            .when().post(Endpoints.ADD_BATCH);
+                response.then().log().ifError();
+        return response;
+    }
+
+    public static Response addTeam (String teamName, String location, int batchNumber){
+        String token = getToken("teacher");
+
+        Response response = given().auth().oauth2(token)
+                                .queryParam("team-name", teamName)
+                                .queryParam("campus-location", location)
+                                .queryParam("batch-number", batchNumber)
+                            .when().post(Endpoints.ADD_TEAM);
+                    response.then().log().ifError();
+            return response;
+    }
+
 
 }
